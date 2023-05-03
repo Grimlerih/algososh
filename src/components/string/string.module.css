@@ -1,0 +1,12 @@
+.form {
+  max-width: 567px;
+  display: flex;
+  margin: 0 auto;
+  gap: 12px;
+}
+
+.circle_list {
+  margin: 120px 0 0 0;
+  justify-content: center;
+  display: flex;
+}
