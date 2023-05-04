@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, FC } from "react";
 import styles from "./string.module.css";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
@@ -12,7 +12,7 @@ interface IString {
   state: ElementStates;
 }
 
-export const StringComponent: React.FC = () => {
+export const StringComponent: FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [array, setArray] = useState<IString[]>([]);
@@ -23,8 +23,6 @@ export const StringComponent: React.FC = () => {
 
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    const firstIndex = 0;
-    const secondIndex = inputValue.length - 1;
 
     const inputArr = Array.from(inputValue);
     const outputArr: IString[] = [];
@@ -41,6 +39,49 @@ export const StringComponent: React.FC = () => {
     });
 
     setArray([...outputArr]);
+
+    let firstIndex = 0;
+    let secondIndex = inputValue.length - 1;
+    let delay = DELAY_IN_MS;
+
+    setTimeout(() => {
+      while (firstIndex <= secondIndex) {
+        reverseArray(outputArr, delay, firstIndex, secondIndex);
+        firstIndex++;
+        secondIndex--;
+        delay += 1000;
+      }
+    }, 1000);
+  };
+
+  const reverseArray = (
+    arr: IString[],
+    time: number,
+    firstIndex: number,
+    secondIndex: number
+  ) => {
+    setTimeout(() => {
+      arr[firstIndex].state = ElementStates.Changing;
+      arr[secondIndex].state = ElementStates.Changing;
+      setArray([...arr]);
+    }, time);
+    setTimeout(() => {
+      swap(arr, firstIndex, secondIndex);
+      arr[firstIndex].state = ElementStates.Modified;
+      arr[secondIndex].state = ElementStates.Modified;
+      setArray([...arr]);
+    }, time + 1000);
+    if (firstIndex + 1 === secondIndex || firstIndex === secondIndex) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, time + 1000);
+    }
+  };
+
+  const swap = (arr: IString[], firstIndex: number, secondIndex: number) => {
+    const temp = arr[firstIndex];
+    arr[firstIndex] = arr[secondIndex];
+    arr[secondIndex] = temp;
   };
 
   return (
@@ -52,10 +93,12 @@ export const StringComponent: React.FC = () => {
           value={inputValue}
           onChange={onChange}
         />
-        <Button text="Развернуть" />
+        <Button text="Развернуть" type="submit" />
       </form>
       <ul className={styles.circle_list}>
-        <Circle />
+        {array?.map((item, index) => {
+          return <Circle state={item.state} letter={item.symbol} key={index} />;
+        })}
       </ul>
     </SolutionLayout>
   );
