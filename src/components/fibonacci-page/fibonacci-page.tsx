@@ -4,6 +4,7 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const FibonacciPage: FC = () => {
   const [inputValue, setInputValue] = useState<number | string>("");
@@ -24,16 +25,40 @@ export const FibonacciPage: FC = () => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoader(true);
+    const fibArray = fib(Number(inputValue));
+    for (let i = 0; i < fibArray.length; i++) {
+      await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+      setArray(fibArray.slice(0, i + 1));
+    }
+    setInputValue("");
+    setLoader(false);
   };
 
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
       <form className={styles.form} onSubmit={onSubmit}>
-        <Input />
-        <Button text="Рассчитать" />
+        <Input
+          type="number"
+          value={inputValue}
+          max={19}
+          min={1}
+          isLimitText
+          onChange={onChange}
+        />
+        <Button
+          text="Рассчитать"
+          isLoader={loader}
+          type="submit"
+          disabled={
+            Number(inputValue)! <= 19 && Number(inputValue)! >= 1 ? false : true
+          }
+        />
       </form>
       <ul className={styles.circle_list}>
-        <Circle />;
+        {array?.map((item, index) => {
+          return <Circle letter={String(item)} index={index} key={index} />;
+        })}
       </ul>
     </SolutionLayout>
   );
