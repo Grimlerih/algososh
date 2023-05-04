@@ -93,7 +93,7 @@ export const StringComponent: FC = () => {
           value={inputValue}
           onChange={onChange}
         />
-        <Button text="Развернуть" type="submit" />
+        <Button text="Развернуть" type="submit" isLoader={isLoading} />
       </form>
       <ul className={styles.circle_list}>
         {array?.map((item, index) => {
