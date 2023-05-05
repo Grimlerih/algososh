@@ -58,6 +58,11 @@ export const StackPage: FC = () => {
     }
   };
 
+  const handleClickClear = () => {
+    stack.clear();
+    setArray([...stack.getContainer()]);
+  };
+
   return (
     <SolutionLayout title="Стек">
       <form className={styles.form}>
@@ -83,7 +88,7 @@ export const StackPage: FC = () => {
             isLoader={loader.delete}
           />
         </div>
-        <Button text={"Очистить"} />
+        <Button text={"Очистить"} type="button" onClick={handleClickClear} />
       </form>
       <ul className={styles.circle_container}>
         {array?.map((item, index) => {
