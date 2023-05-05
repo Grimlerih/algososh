@@ -6,10 +6,12 @@ import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 import { Stack } from "./stack-class";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { nanoid } from "nanoid";
 
 export type TElement = {
   value: string;
-  color: ElementStates;
+  state: ElementStates;
 };
 
 export const StackPage: FC = () => {
@@ -29,7 +31,21 @@ export const StackPage: FC = () => {
   const handleClickPush = async () => {
     if (inputValue) {
       setLoader({ ...loader, add: true });
-      stack.push({ value: inputValue, color: ElementStates.Changing });
+      stack.push({ value: inputValue, state: ElementStates.Changing });
+      setArray([...stack.getContainer()]);
+      setInputValue("");
+      await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+      stack.peak()!.state = ElementStates.Default;
+      setArray([...stack.getContainer()]);
+      setLoader({ ...loader, add: false });
+    }
+  };
+
+  const getPosition = (index: number, arr: TElement[]): string => {
+    if (index === arr.length - 1) {
+      return "top";
+    } else {
+      return "";
     }
   };
 
@@ -43,13 +59,27 @@ export const StackPage: FC = () => {
             maxLength={4}
             onChange={onChange}
           />
-          <Button text={"Добавить"} />
+          <Button
+            text={"Добавить"}
+            onClick={handleClickPush}
+            isLoader={loader.add}
+          />
           <Button text={"Удалить"} />
         </div>
         <Button text={"Очистить"} />
       </form>
       <ul className={styles.circle_container}>
-        <Circle />
+        {array.map((item: TElement, index: number) => {
+          return (
+            <Circle
+              key={nanoid()}
+              index={index}
+              letter={item.value}
+              state={item.state}
+              head={getPosition(index, array)}
+            />
+          );
+        })}
       </ul>
     </SolutionLayout>
   );
