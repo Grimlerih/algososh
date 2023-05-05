@@ -110,23 +110,36 @@ export const SortingPage: FC = () => {
             value="selectionSort"
             onChange={onChange}
             defaultChecked
+            disabled={loader.loader}
+            name="sortType"
           />
-          <RadioInput label="Пузырёк" value="bubbleSort" onChange={onChange} />
+          <RadioInput
+            label="Пузырёк"
+            name="sortType"
+            value="bubbleSort"
+            onChange={onChange}
+            disabled={loader.loader}
+          />
         </div>
         <div className={styles.buttons_container}>
           <Button
             text="По возрастанию"
             sorting={Direction.Ascending}
             onClick={() => handleSort(Direction.Ascending)}
+            isLoader={loader.ascending}
+            disabled={loader.descending}
           />
           <Button
             text="По убыванию"
             sorting={Direction.Descending}
             onClick={() => handleSort(Direction.Descending)}
+            isLoader={loader.descending}
+            disabled={loader.ascending}
           />
           <Button
             text="Новый массив"
             onClick={() => setArray(getRandomArray())}
+            disabled={loader.loader}
           />
         </div>
       </div>
