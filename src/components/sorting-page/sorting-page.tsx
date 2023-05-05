@@ -100,7 +100,17 @@ export const SortingPage: FC = () => {
           <Button text="Новый массив" />
         </div>
       </div>
-      <ul className={styles.column_list}></ul>
+      <ul className={styles.column_list}>
+        {array?.map((item) => {
+          return (
+            <Column
+              key={Number(item.index)}
+              index={item.index}
+              state={item.state}
+            />
+          );
+        })}
+      </ul>
     </SolutionLayout>
   );
 };
