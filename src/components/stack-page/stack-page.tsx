@@ -8,15 +8,15 @@ import { Circle } from "../ui/circle/circle";
 export const StackPage: FC = () => {
   return (
     <SolutionLayout title="Стек">
-      <form>
-        <div>
+      <form className={styles.form}>
+        <div className={styles.input_container}>
           <Input placeholder="Введите текст" />
           <Button text={"Добавить"} />
           <Button text={"Удалить"} />
         </div>
         <Button text={"Очистить"} />
       </form>
-      <ul>
+      <ul className={styles.circle_container}>
         <Circle />
       </ul>
     </SolutionLayout>
