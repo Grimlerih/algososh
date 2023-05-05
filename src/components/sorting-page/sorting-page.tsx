@@ -8,6 +8,7 @@ import { Direction } from "../../types/direction";
 import { ElementStates } from "../../types/element-states";
 import { swap, getRandomArray } from "./utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { nanoid } from "nanoid";
 
 export type SortTypes = {
   index: number;
@@ -31,7 +32,7 @@ export const SortingPage: FC = () => {
     if (radioValue === "selectionSort") {
       selectionSort(array, order);
     } else {
-      bubbleSort();
+      bubbleSort(array, order);
     }
   };
 
@@ -72,7 +73,33 @@ export const SortingPage: FC = () => {
     setLoader({ loader: false, descending: false, ascending: false });
   };
 
-  const bubbleSort = () => {};
+  const bubbleSort = async (arr: SortTypes[], order: Direction) => {
+    if (order === Direction.Ascending) {
+      setLoader({ ...loader, loader: true, ascending: true });
+    } else {
+      setLoader({ ...loader, loader: true, descending: true });
+    }
+    const { length } = arr;
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length - i - 1; j++) {
+        arr[j].state = ElementStates.Changing;
+        arr[j + 1].state = ElementStates.Changing;
+        setArray([...array]);
+        await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+        if (
+          order === Direction.Ascending
+            ? arr[j].index > arr[j + 1].index
+            : arr[j].index < arr[j + 1].index
+        ) {
+          swap(arr, j, j + 1);
+        }
+        arr[j].state = ElementStates.Default;
+      }
+      arr[arr.length - i - 1].state = ElementStates.Modified;
+      setArray([...arr]);
+    }
+    setLoader({ loader: false, descending: false, ascending: false });
+  };
 
   return (
     <SolutionLayout title="Сортировка массива">
@@ -97,17 +124,16 @@ export const SortingPage: FC = () => {
             sorting={Direction.Descending}
             onClick={() => handleSort(Direction.Descending)}
           />
-          <Button text="Новый массив" />
+          <Button
+            text="Новый массив"
+            onClick={() => setArray(getRandomArray())}
+          />
         </div>
       </div>
       <ul className={styles.column_list}>
         {array?.map((item) => {
           return (
-            <Column
-              key={Number(item.index)}
-              index={item.index}
-              state={item.state}
-            />
+            <Column key={nanoid()} index={item.index} state={item.state} />
           );
         })}
       </ul>
