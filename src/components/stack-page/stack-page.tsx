@@ -17,12 +17,11 @@ export type TElement = {
 export const StackPage: FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [array, setArray] = useState<TElement[]>([]);
+  const [stack] = useState(new Stack<TElement>());
   const [loader, setLoader] = useState({
     add: false,
     delete: false,
   });
-
-  const stack = new Stack<TElement>();
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
@@ -58,9 +57,12 @@ export const StackPage: FC = () => {
             value={inputValue}
             maxLength={4}
             onChange={onChange}
+            isLimitText={true}
+            id="stack-input"
           />
           <Button
             text={"Добавить"}
+            type="button"
             onClick={handleClickPush}
             isLoader={loader.add}
           />
@@ -69,7 +71,7 @@ export const StackPage: FC = () => {
         <Button text={"Очистить"} />
       </form>
       <ul className={styles.circle_container}>
-        {array.map((item: TElement, index: number) => {
+        {array?.map((item, index) => {
           return (
             <Circle
               key={nanoid()}
