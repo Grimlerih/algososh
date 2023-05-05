@@ -23,38 +23,64 @@ export const QueuePage: FC = () => {
     delete: false,
   });
 
+  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(evt.target.value);
+  };
+
   const delay = (del: number) => {
     return new Promise<void>((res) => setTimeout(res, del));
   };
 
   const handleClickEnqueue = async () => {
-    if (inputValue) {
-      setLoader({ ...loader, add: true });
-      queue.enqueue({ value: inputValue, state: ElementStates.Changing });
-      setInputValue("");
-      setArray([...queue.getContainer()]);
-      await delay(SHORT_DELAY_IN_MS);
-      queue.getContainer()[queue.getTail() - 1].state = ElementStates.Default;
-      setArray([...queue.getContainer()]);
-      setLoader({ ...loader, add: false });
-    }
+    setLoader({ ...loader, add: true });
+    queue.enqueue({ value: inputValue, state: ElementStates.Changing });
+    setArray([...queue.getContainer()]);
+    await delay(SHORT_DELAY_IN_MS);
+    queue.getContainer()[queue.getTail() - 1].state = ElementStates.Default;
+    setArray([...queue.getContainer()]);
+    setLoader({ ...loader, add: false });
+    setInputValue("");
   };
 
-  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(evt.target.value);
+  const handleClickDequeue = async () => {
+    setLoader({ ...loader, delete: true });
+    queue.getContainer()[queue.getHead()].value = ElementStates.Changing;
+    setArray([...queue.getContainer()]);
+    await delay(SHORT_DELAY_IN_MS);
+    queue.dequeue();
+    setArray([...queue.getContainer()]);
+    setLoader({ ...loader, delete: false });
   };
+
   return (
     <SolutionLayout title="Очередь">
       <form className={styles.form}>
         <div className={styles.input_container}>
-          <Input placeholder="Введите текст" onChange={onChange} />
+          <Input
+            placeholder="Введите текст"
+            onChange={onChange}
+            value={inputValue}
+          />
           <Button text={"Добавить"} onClick={handleClickEnqueue} />
-          <Button text={"Удалить"} />
+          <Button text={"Удалить"} onClick={handleClickDequeue} />
         </div>
         <Button text={"Очистить"} />
       </form>
       <ul className={styles.circle_container}>
-        <Circle key={nanoid()} />
+        {array.map((item, index) => {
+          return (
+            <Circle
+              key={nanoid()}
+              index={index}
+              letter={item.value}
+              state={item.state}
+              head={index === queue.getHead() && !queue.isEmpty() ? "head" : ""}
+              tail={
+                index === queue.getTail() - 1 && !queue.isEmpty() ? "tail" : ""
+              }
+            />
+          );
+        })}
       </ul>
     </SolutionLayout>
   );
