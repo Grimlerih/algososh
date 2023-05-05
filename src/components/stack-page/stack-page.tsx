@@ -27,13 +27,17 @@ export const StackPage: FC = () => {
     setInputValue(evt.target.value);
   };
 
+  const delay = (del: number) => {
+    return new Promise<void>((res) => setTimeout(res, del));
+  };
+
   const handleClickPush = async () => {
     if (inputValue) {
       setLoader({ ...loader, add: true });
       stack.push({ value: inputValue, state: ElementStates.Changing });
       setArray([...stack.getContainer()]);
       setInputValue("");
-      await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+      await delay(SHORT_DELAY_IN_MS);
       stack.peak()!.state = ElementStates.Default;
       setArray([...stack.getContainer()]);
       setLoader({ ...loader, add: false });
@@ -45,7 +49,7 @@ export const StackPage: FC = () => {
     stack.peak()!.state = ElementStates.Changing;
     setArray([...stack.getContainer()]);
     stack.pop();
-    await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+    await delay(SHORT_DELAY_IN_MS);
     setArray([...stack.getContainer()]);
     setLoader({ ...loader, delete: false });
   };
