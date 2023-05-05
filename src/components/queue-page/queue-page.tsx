@@ -52,6 +52,11 @@ export const QueuePage: FC = () => {
     setLoader({ ...loader, delete: false });
   };
 
+  const handleClickClear = () => {
+    queue.clear();
+    setArray([...queue.getContainer()]);
+  };
+
   return (
     <SolutionLayout title="Очередь">
       <form className={styles.form}>
@@ -61,10 +66,20 @@ export const QueuePage: FC = () => {
             onChange={onChange}
             value={inputValue}
           />
-          <Button text={"Добавить"} onClick={handleClickEnqueue} />
-          <Button text={"Удалить"} onClick={handleClickDequeue} />
+          <Button
+            text={"Добавить"}
+            onClick={handleClickEnqueue}
+            disabled={loader.delete || !inputValue || queue.isFullQueue()}
+            isLoader={loader.add}
+          />
+          <Button
+            text={"Удалить"}
+            onClick={handleClickDequeue}
+            isLoader={loader.delete}
+            disabled={loader.add || !!queue.isEmpty()}
+          />
         </div>
-        <Button text={"Очистить"} />
+        <Button text={"Очистить"} onClick={handleClickClear} />
       </form>
       <ul className={styles.circle_container}>
         {array.map((item, index) => {
