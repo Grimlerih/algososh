@@ -5,6 +5,7 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
+import { Stack } from "./stack-class";
 
 export type TElement = {
   value: string;
@@ -19,13 +20,16 @@ export const StackPage: FC = () => {
     delete: false,
   });
 
+  const stack = new Stack<TElement>();
+
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
   };
 
-  const handleClickPush = () => {
+  const handleClickPush = async () => {
     if (inputValue) {
       setLoader({ ...loader, add: true });
+      stack.push({ value: inputValue, color: ElementStates.Changing });
     }
   };
 
