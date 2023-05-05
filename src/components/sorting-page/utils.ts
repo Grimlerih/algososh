@@ -8,4 +8,20 @@ export const swap = (arr: SortTypes[] , firstIndex: number, secondIndex: number)
   arr[secondIndex] = temp;
 };
 
+const getRandomInteger = (min: number, max: number) => {
+  const r = Math.random() * (max - min) + min;
+  return Math.floor(r);
+}
+
+export const getRandomArray = () => {
+  const min = 3;
+  const max = 17;
+  let arr = [];
+  for (let i = 0; i <= getRandomInteger(min, max); i++)
+    arr.push({
+      index: Math.floor(Math.random() * 100),
+      state: ElementStates.Default,
+    });
+  return arr;
+}
 

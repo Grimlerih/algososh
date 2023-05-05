@@ -6,7 +6,7 @@ import { RadioInput } from "../ui/radio-input/radio-input";
 import { Column } from "../ui/column/column";
 import { Direction } from "../../types/direction";
 import { ElementStates } from "../../types/element-states";
-import { swap } from "./utils";
+import { swap, getRandomArray } from "./utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export type SortTypes = {
@@ -16,7 +16,7 @@ export type SortTypes = {
 
 export const SortingPage: FC = () => {
   const [radioValue, setRadioValue] = useState("selectionSort");
-  const [array, setArray] = useState<SortTypes[]>();
+  const [array, setArray] = useState<SortTypes[]>(getRandomArray());
   const [loader, setLoader] = useState({
     ascending: false,
     descending: false,
