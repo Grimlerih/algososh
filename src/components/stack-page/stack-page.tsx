@@ -40,6 +40,16 @@ export const StackPage: FC = () => {
     }
   };
 
+  const handleClickPop = async () => {
+    setLoader({ ...loader, delete: true });
+    stack.peak()!.state = ElementStates.Changing;
+    setArray([...stack.getContainer()]);
+    stack.pop();
+    await new Promise<void>((res) => setTimeout(res, SHORT_DELAY_IN_MS));
+    setArray([...stack.getContainer()]);
+    setLoader({ ...loader, delete: false });
+  };
+
   const getPosition = (index: number, arr: TElement[]): string => {
     if (index === arr.length - 1) {
       return "top";
@@ -66,7 +76,12 @@ export const StackPage: FC = () => {
             onClick={handleClickPush}
             isLoader={loader.add}
           />
-          <Button text={"Удалить"} />
+          <Button
+            text={"Удалить"}
+            type="button"
+            onClick={handleClickPop}
+            isLoader={loader.delete}
+          />
         </div>
         <Button text={"Очистить"} />
       </form>
