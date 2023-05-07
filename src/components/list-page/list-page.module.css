@@ -1,0 +1,21 @@
+.form {
+  max-width: 952px;
+  margin: 0 auto;
+  flex-direction: column;
+  display: flex;
+  gap: 12px;
+}
+
+.form__container {
+  display: flex;
+  gap: 12px;
+}
+
+.circle_container {
+  max-width: 944px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 120px 0 0 0;
+  flex-wrap: wrap;
+}
