@@ -34,6 +34,7 @@ export const ListPage: FC = () => {
     setInputValue(evt.target.value);
   };
 
+  // начало списка
   const handleAddHead = async (input: string) => {
     setAddToHead({ ...addToHead, addHead: true, button: true });
     let element = {
@@ -63,6 +64,34 @@ export const ListPage: FC = () => {
     linkedList.changeElement(0, { state: ElementStates.Default });
     setArray([...linkedList.getElements()]);
   };
+
+  const handleAddTail = async (input: string) => {
+    setAddToTail({ ...addToTail, addTail: true, button: true });
+    const arr = linkedList.getElements();
+    let step = arr.length - 1;
+    let changes = {
+      circle: { value: input, state: ElementStates.Changing },
+      circleBottom: false,
+    };
+    linkedList.changeElement(step, changes);
+    setArray([...linkedList.getElements()]);
+    await delay(1000);
+
+    linkedList.changeElement(step, { circle: null });
+    linkedList.append({
+      value: input,
+      state: ElementStates.Modified,
+      circle: null,
+      circleBottom: false,
+    });
+    setArray([...linkedList.getElements()]);
+    await delay(1000);
+
+    linkedList.changeElement(step + 1, { state: ElementStates.Default });
+    setArray([...linkedList.getElements()]);
+    setAddToTail({ ...addToTail });
+  };
+
   return (
     <SolutionLayout title="Связный список">
       <div className={styles.form}>
@@ -79,7 +108,11 @@ export const ListPage: FC = () => {
             text="Добавить в head"
             onClick={() => handleAddHead(inputValue!)}
           />
-          <Button type="button" text="Добавить в tail" />
+          <Button
+            type="button"
+            text="Добавить в tail"
+            onClick={() => handleAddTail(inputValue!)}
+          />
           <Button type="button" text="Удалить из head" />
           <Button type="button" text="Удалить из tail" />
         </div>
