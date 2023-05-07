@@ -4,9 +4,16 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
+import { LinkedList } from "./list-page-class";
+import { initialArray } from "./utils";
 
 export const ListPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
+
+  const linkedList = React.useMemo(() => {
+    return new LinkedList<string>(initialArray);
+    // eslint-disable-next-line
+  }, []);
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
