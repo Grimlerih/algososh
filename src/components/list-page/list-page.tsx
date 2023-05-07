@@ -34,7 +34,7 @@ export const ListPage: FC = () => {
     setInputValue(evt.target.value);
   };
 
-  // начало списка
+  // добавление в начало списка
   const handleAddHead = async (input: string) => {
     setAddToHead({ ...addToHead, addHead: true, button: true });
     let element = {
@@ -65,6 +65,7 @@ export const ListPage: FC = () => {
     setArray([...linkedList.getElements()]);
   };
 
+  // добавление в конец списка
   const handleAddTail = async (input: string) => {
     setAddToTail({ ...addToTail, addTail: true, button: true });
     const arr = linkedList.getElements();
@@ -76,7 +77,6 @@ export const ListPage: FC = () => {
     linkedList.changeElement(step, changes);
     setArray([...linkedList.getElements()]);
     await delay(1000);
-
     linkedList.changeElement(step, { circle: null });
     linkedList.append({
       value: input,
@@ -86,10 +86,26 @@ export const ListPage: FC = () => {
     });
     setArray([...linkedList.getElements()]);
     await delay(1000);
-
     linkedList.changeElement(step + 1, { state: ElementStates.Default });
     setArray([...linkedList.getElements()]);
     setAddToTail({ ...addToTail });
+  };
+
+  //удаляем элемент из head
+  const handleDeleteHead = async () => {
+    const array = linkedList.getElements();
+    const temp = array[0];
+    setAddToHead({ ...addToHead, button: true, displayHead: true });
+    linkedList.changeElement(0, {
+      value: "",
+      circle: { value: temp.value, state: ElementStates.Changing },
+      circleBottom: true,
+    });
+    setArray([...linkedList.getElements()]);
+    await delay(1000);
+    linkedList.deleteHead();
+    setArray([...linkedList.getElements()]);
+    setAddToHead({ ...addToHead });
   };
 
   return (
@@ -113,7 +129,11 @@ export const ListPage: FC = () => {
             text="Добавить в tail"
             onClick={() => handleAddTail(inputValue!)}
           />
-          <Button type="button" text="Удалить из head" />
+          <Button
+            type="button"
+            text="Удалить из head"
+            onClick={() => handleDeleteHead()}
+          />
           <Button type="button" text="Удалить из tail" />
         </div>
         <div className={styles.form__container}>
