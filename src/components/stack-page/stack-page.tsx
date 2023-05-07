@@ -1,4 +1,4 @@
-import { FC, ChangeEvent, useState } from "react";
+import { FC, ChangeEvent, useState, FormEvent } from "react";
 import styles from "./stack-page.module.css";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
@@ -24,7 +24,6 @@ export const StackPage: FC = () => {
   });
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    evt.preventDefault();
     setInputValue(evt.target.value);
   };
 
@@ -32,7 +31,8 @@ export const StackPage: FC = () => {
     return new Promise<void>((res) => setTimeout(res, del));
   };
 
-  const handleClickPush = async () => {
+  const handleClickPush = async (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
     if (inputValue) {
       setLoader({ ...loader, add: true });
       stack.push({ value: inputValue, state: ElementStates.Changing });
@@ -70,7 +70,7 @@ export const StackPage: FC = () => {
 
   return (
     <SolutionLayout title="Стек">
-      <div className={styles.form}>
+      <form className={styles.form} onSubmit={handleClickPush}>
         <div className={styles.input_container}>
           <Input
             placeholder="Введите текст"
@@ -83,7 +83,6 @@ export const StackPage: FC = () => {
           <Button
             text={"Добавить"}
             type="submit"
-            onClick={handleClickPush}
             isLoader={loader.add}
             disabled={!inputValue}
           />
@@ -101,7 +100,7 @@ export const StackPage: FC = () => {
           onClick={handleClickClear}
           disabled={!array.length}
         />
-      </div>
+      </form>
       <ul className={styles.circle_container}>
         {array?.map((item, index) => {
           return (

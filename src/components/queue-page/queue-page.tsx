@@ -1,4 +1,4 @@
-import { useState, FC, ChangeEvent } from "react";
+import { useState, FC, ChangeEvent, FormEvent } from "react";
 import styles from "./queue-page.module.css";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { nanoid } from "nanoid";
@@ -31,7 +31,8 @@ export const QueuePage: FC = () => {
     return new Promise<void>((res) => setTimeout(res, del));
   };
 
-  const handleClickEnqueue = async () => {
+  const handleClickEnqueue = async (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
     setLoader({ ...loader, add: true });
     queue.enqueue({ value: inputValue, state: ElementStates.Changing });
     setArray([...queue.getContainer()]);
@@ -59,7 +60,7 @@ export const QueuePage: FC = () => {
 
   return (
     <SolutionLayout title="Очередь">
-      <div className={styles.form}>
+      <form className={styles.form} onSubmit={handleClickEnqueue}>
         <div className={styles.input_container}>
           <Input
             placeholder="Введите текст"
@@ -70,7 +71,7 @@ export const QueuePage: FC = () => {
           />
           <Button
             text={"Добавить"}
-            onClick={handleClickEnqueue}
+            type="submit"
             disabled={loader.delete || !inputValue || queue.isFullQueue()}
             isLoader={loader.add}
           />
@@ -86,7 +87,7 @@ export const QueuePage: FC = () => {
           onClick={handleClickClear}
           disabled={queue.isEmpty()}
         />
-      </div>
+      </form>
       <ul className={styles.circle_container}>
         {array.map((item, index) => {
           return (
