@@ -14,14 +14,16 @@ import { ArrowIcon } from "../ui/icons/arrow-icon";
 export const ListPage: FC = () => {
   const [array, setArray] = useState<IListElement[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [addToHead, setAddToHead] = useState({
+  const [head, setHead] = useState({
     addHead: false,
-    button: false,
+    buttonDisable: false,
+    buttonLoad: false,
     displayHead: true,
   });
-  const [addToTail, setAddToTail] = useState({
+  const [tail, setTail] = useState({
     addTail: false,
-    button: false,
+    buttonDisable: false,
+    buttonLoad: false,
     displayTail: true,
   });
 
@@ -36,7 +38,7 @@ export const ListPage: FC = () => {
 
   // добавление в начало списка
   const handleAddHead = async (input: string) => {
-    setAddToHead({ ...addToHead, addHead: true, button: true });
+    setHead({ ...head, addHead: true, buttonDisable: true });
     let element = {
       state: ElementStates.Changing,
       circle: { value: input, state: ElementStates.Default },
@@ -45,7 +47,7 @@ export const ListPage: FC = () => {
     linkedList.changeElement(0, element);
     setInputValue("");
     setArray([...linkedList.getElements()]);
-    setAddToHead({ ...addToHead, displayHead: false });
+    setHead({ ...head, displayHead: false });
     await delay(1000);
     linkedList.changeElement(0, { circle: null, state: ElementStates.Default });
     if (array.length === 0) {
@@ -58,7 +60,7 @@ export const ListPage: FC = () => {
     } else {
       linkedList.prepend(input);
     }
-    setAddToHead({ ...addToHead });
+    setHead({ ...head });
     setArray([...linkedList.getElements()]);
     await delay(1000);
     linkedList.changeElement(0, { state: ElementStates.Default });
@@ -67,7 +69,7 @@ export const ListPage: FC = () => {
 
   // добавление в конец списка
   const handleAddTail = async (input: string) => {
-    setAddToTail({ ...addToTail, addTail: true, button: true });
+    setTail({ ...tail, addTail: true, buttonDisable: true });
     const arr = linkedList.getElements();
     let step = arr.length - 1;
     let changes = {
@@ -88,14 +90,14 @@ export const ListPage: FC = () => {
     await delay(1000);
     linkedList.changeElement(step + 1, { state: ElementStates.Default });
     setArray([...linkedList.getElements()]);
-    setAddToTail({ ...addToTail });
+    setTail({ ...tail });
   };
 
   //удаляем элемент из head
   const handleDeleteHead = async () => {
     const array = linkedList.getElements();
     const temp = array[0];
-    setAddToHead({ ...addToHead, button: true, displayHead: true });
+    setHead({ ...head, buttonDisable: true });
     linkedList.changeElement(0, {
       value: "",
       circle: { value: temp.value, state: ElementStates.Changing },
@@ -105,7 +107,27 @@ export const ListPage: FC = () => {
     await delay(1000);
     linkedList.deleteHead();
     setArray([...linkedList.getElements()]);
-    setAddToHead({ ...addToHead });
+    setHead({ ...head });
+  };
+
+  //удаляем элемент из tail
+  const handleDeleteTail = async () => {
+    const arr = linkedList.getElements();
+    const temp = arr[arr.length - 1];
+    const changes = {
+      value: "",
+      circle: { value: temp.value, state: ElementStates.Changing },
+      circleBottom: true,
+    };
+
+    setTail({ ...tail, buttonDisable: true, buttonLoad: true });
+    linkedList.changeElement(arr.length - 1, changes);
+    setArray([...linkedList.getElements()]);
+    setTail({ ...tail, displayTail: true });
+    await delay(1000);
+    linkedList.deleteTail();
+    setArray([...linkedList.getElements()]);
+    setTail({ ...tail });
   };
 
   return (
@@ -132,9 +154,15 @@ export const ListPage: FC = () => {
           <Button
             type="button"
             text="Удалить из head"
+            isLoader={head.buttonLoad}
             onClick={() => handleDeleteHead()}
           />
-          <Button type="button" text="Удалить из tail" />
+          <Button
+            type="button"
+            text="Удалить из tail"
+            isLoader={tail.buttonLoad}
+            onClick={() => handleDeleteTail()}
+          />
         </div>
         <div className={styles.form__container}>
           <Input type="number" placeholder="Введите индекс" />
@@ -159,11 +187,9 @@ export const ListPage: FC = () => {
                 letter={item.value}
                 key={nanoid()}
                 state={item.state}
-                head={index === 0 && addToHead.displayHead ? "head" : ""}
+                head={index === 0 && head.displayHead ? "head" : ""}
                 tail={
-                  array.length - 1 === index && addToTail.displayTail
-                    ? "tail"
-                    : ""
+                  array.length - 1 === index && tail.displayTail ? "tail" : ""
                 }
                 index={index}
               />
