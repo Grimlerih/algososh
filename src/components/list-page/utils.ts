@@ -26,3 +26,7 @@ export const initialArray = [
     circleBottom: false,
   },
 ];
+
+export const delay = (del: number) => {
+  return new Promise<void>((res) => setTimeout(res, del));
+};

@@ -1,6 +1,6 @@
 import { ElementStates } from "../../types/element-states";
 
- interface IListElement {
+export interface IListElement {
   value?: string | number;
   state?: ElementStates;
   circle?: null | {
@@ -10,7 +10,7 @@ import { ElementStates } from "../../types/element-states";
   circleBottom?: boolean;
 }
 
- interface IList<T> {
+export interface IList<T> {
     setContainer: (data: IListElement[]) => void;
     getElements: () => IListElement[];
     changeElement: (i: number, data: IListElement) => void;
