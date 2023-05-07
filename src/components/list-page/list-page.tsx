@@ -31,8 +31,41 @@ export const ListPage: FC = () => {
     addIndex: false,
     buttonDisable: false,
     buttonLoad: false,
-    displayTail: true,
+    displayIndex: true,
   });
+
+  //удаляем элемент по индексу
+  const handleDeleteByIndex = async (index: string) => {
+    const arr = array;
+    const inputIndex = Number(index);
+
+    setindexState({ ...indexState, buttonDisable: true, buttonLoad: true });
+    for (let i = 0; i < arr.length; i++) {
+      let changes = {};
+      linkedList.changeElement(i, { state: ElementStates.Changing });
+      setArray([...linkedList.getElements()]);
+      await delay(1000);
+      if (i === inputIndex) {
+        changes = {
+          state: ElementStates.Default,
+          value: "",
+          circle: { value: arr[i].value, state: ElementStates.Changing },
+          circleBottom: true,
+        };
+        linkedList.changeElement(i, changes);
+        setArray([...linkedList.getElements()]);
+        setindexState({ ...indexState, displayIndex: false });
+        await delay(1000);
+
+        linkedList.deleteByIndex(i);
+        setArray([...linkedList.getElements()]);
+
+        setindexState({ ...indexState });
+        return;
+      }
+    }
+    setArray([...arr]);
+  };
 
   //добавляем элемент по индексу
   const handleAddByIndex = async (index: string, input: string) => {
@@ -223,12 +256,17 @@ export const ListPage: FC = () => {
             placeholder="Введите индекс"
             onChange={inputIndexOnChange}
           />
+
           <Button
             type="button"
             text="Добавить по индексу"
             onClick={() => handleAddByIndex(indexInputValue!, inputValue!)}
           />
-          <Button type="button" text="Удалить по индексу" />
+          <Button
+            type="button"
+            text="Удалить по индексу"
+            onClick={() => handleDeleteByIndex(indexInputValue!)}
+          />
         </div>
       </div>
       <ul className={styles.circle_container}>
