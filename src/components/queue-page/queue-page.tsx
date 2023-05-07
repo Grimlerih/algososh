@@ -65,6 +65,8 @@ export const QueuePage: FC = () => {
             placeholder="Введите текст"
             onChange={onChange}
             value={inputValue}
+            isLimitText={true}
+            maxLength={4}
           />
           <Button
             text={"Добавить"}
