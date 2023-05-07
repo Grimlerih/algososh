@@ -2,25 +2,25 @@ import { ElementStates } from '../../types/element-states'
 
 export const initialArray = [
   {
-    value: 0,
+    value: "0",
     state: ElementStates.Default,
     circle: null,
     circleBottom: false,
   },
   {
-    value: 34,
+    value: "34",
     state: ElementStates.Default,
     circle: null,
     circleBottom: false,
   },
   {
-    value: 8,
+    value: "8",
     state: ElementStates.Default,
     circle: null,
     circleBottom: false,
   },
   {
-    value: 1,
+    value: "1",
     state: ElementStates.Default,
     circle: null,
     circleBottom: false,

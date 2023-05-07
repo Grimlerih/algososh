@@ -9,6 +9,7 @@ import { initialArray } from "./utils";
 import { ElementStates } from "../../types/element-states";
 import { delay } from "./utils";
 import { nanoid } from "nanoid";
+import { ArrowIcon } from "../ui/icons/arrow-icon";
 
 export const ListPage: FC = () => {
   const [array, setArray] = useState<IListElement[]>([]);
@@ -16,6 +17,12 @@ export const ListPage: FC = () => {
   const [addToHead, setAddToHead] = useState({
     addHead: false,
     button: false,
+    displayHead: true,
+  });
+  const [addToTail, setAddToTail] = useState({
+    addTail: false,
+    button: false,
+    displayTail: true,
   });
 
   const linkedList = useMemo(() => {
@@ -27,6 +34,35 @@ export const ListPage: FC = () => {
     setInputValue(evt.target.value);
   };
 
+  const handleAddHead = async (input: string) => {
+    setAddToHead({ ...addToHead, addHead: true, button: true });
+    let element = {
+      state: ElementStates.Changing,
+      circle: { value: input, state: ElementStates.Default },
+      circleBottom: false,
+    };
+    linkedList.changeElement(0, element);
+    setInputValue("");
+    setArray([...linkedList.getElements()]);
+    setAddToHead({ ...addToHead, displayHead: false });
+    await delay(1000);
+    linkedList.changeElement(0, { circle: null, state: ElementStates.Default });
+    if (array.length === 0) {
+      linkedList.changeElement(0, {
+        value: input,
+        state: ElementStates.Default,
+        circle: null,
+        circleBottom: false,
+      });
+    } else {
+      linkedList.prepend(input);
+    }
+    setAddToHead({ ...addToHead });
+    setArray([...linkedList.getElements()]);
+    await delay(1000);
+    linkedList.changeElement(0, { state: ElementStates.Default });
+    setArray([...linkedList.getElements()]);
+  };
   return (
     <SolutionLayout title="Связный список">
       <div className={styles.form}>
@@ -53,7 +89,45 @@ export const ListPage: FC = () => {
           <Button type="button" text="Удалить по индексу" />
         </div>
       </div>
-      <ul className={styles.circle_container}></ul>
+      <ul className={styles.circle_container}>
+        {array.map((item, index) => {
+          return (
+            <div key={nanoid()} className={styles.array_list}>
+              <div className={styles.circle_top}>
+                {item.circle && item.circleBottom === false && (
+                  <Circle
+                    letter={item?.circle?.value}
+                    state={item.circle?.state}
+                    isSmall
+                  />
+                )}
+              </div>
+              <Circle
+                letter={item.value}
+                key={nanoid()}
+                state={item.state}
+                head={index === 0 && addToHead.displayHead ? "head" : ""}
+                tail={
+                  array.length - 1 === index && addToTail.displayTail
+                    ? "tail"
+                    : ""
+                }
+                index={index}
+              />
+              <div className={styles.circle_bottom}>
+                {item.circle && item.circleBottom && (
+                  <Circle
+                    letter={item?.circle?.value}
+                    state={item.circle?.state}
+                    isSmall
+                  />
+                )}
+              </div>
+              {array.length - 1 !== index && <ArrowIcon />}
+            </div>
+          );
+        })}
+      </ul>
     </SolutionLayout>
   );
 };
