@@ -14,6 +14,7 @@ import { ArrowIcon } from "../ui/icons/arrow-icon";
 export const ListPage: FC = () => {
   const [array, setArray] = useState<IListElement[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [indexInputValue, setindexInputValue] = useState<string>("");
   const [head, setHead] = useState({
     addHead: false,
     buttonDisable: false,
@@ -26,6 +27,54 @@ export const ListPage: FC = () => {
     buttonLoad: false,
     displayTail: true,
   });
+  const [indexState, setindexState] = useState({
+    addIndex: false,
+    buttonDisable: false,
+    buttonLoad: false,
+    displayTail: true,
+  });
+
+  //добавляем элемент по индексу
+  const handleAddByIndex = async (index: string, input: string) => {
+    const arr = linkedList.getElements();
+    const indexInput = Number(index);
+    setindexState({ ...indexState, buttonDisable: true, buttonLoad: true });
+
+    for (let i = 0; i < arr.length; i++) {
+      if (indexInput !== i) {
+        let changes = {
+          state: ElementStates.Changing,
+          circle: { value: input, state: ElementStates.Default },
+        };
+        linkedList.changeElement(i, changes);
+        setArray([...linkedList.getElements()]);
+        setindexState({ ...indexState, addIndex: false });
+        await delay(1000);
+        linkedList.changeElement(i, { circle: null });
+        setArray([...linkedList.getElements()]);
+      } else {
+        let element = {
+          circle: { value: input, state: ElementStates.Changing },
+        };
+        linkedList.changeElement(indexInput, element);
+        setArray([...linkedList.getElements()]);
+        await delay(1000);
+        linkedList.changeElement(indexInput, { circle: null });
+        setArray([...linkedList.getElements()]);
+        linkedList.addByIndex(indexInput, input);
+        setArray([...linkedList.getElements()]);
+        linkedList.changeElement(i, { state: ElementStates.Modified });
+        setArray([...linkedList.getElements()]);
+        setindexState({ ...indexState });
+        await delay(1000);
+        linkedList.changeElement(i, { state: ElementStates.Default });
+        setArray([...linkedList.getElements()]);
+
+        setindexState({ ...indexState });
+        return;
+      }
+    }
+  };
 
   const linkedList = useMemo(() => {
     return new LinkedList<string>(initialArray);
@@ -34,6 +83,10 @@ export const ListPage: FC = () => {
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
+  };
+
+  const inputIndexOnChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setindexInputValue(evt.target.value);
   };
 
   // добавление в начало списка
@@ -165,8 +218,16 @@ export const ListPage: FC = () => {
           />
         </div>
         <div className={styles.form__container}>
-          <Input type="number" placeholder="Введите индекс" />
-          <Button type="button" text="Добавить по индексу" />
+          <Input
+            type="number"
+            placeholder="Введите индекс"
+            onChange={inputIndexOnChange}
+          />
+          <Button
+            type="button"
+            text="Добавить по индексу"
+            onClick={() => handleAddByIndex(indexInputValue!, inputValue!)}
+          />
           <Button type="button" text="Удалить по индексу" />
         </div>
       </div>
