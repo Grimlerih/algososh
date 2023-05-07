@@ -24,6 +24,7 @@ export const StackPage: FC = () => {
   });
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    evt.preventDefault();
     setInputValue(evt.target.value);
   };
 
@@ -69,7 +70,7 @@ export const StackPage: FC = () => {
 
   return (
     <SolutionLayout title="Стек">
-      <form className={styles.form}>
+      <div className={styles.form}>
         <div className={styles.input_container}>
           <Input
             placeholder="Введите текст"
@@ -81,19 +82,26 @@ export const StackPage: FC = () => {
           />
           <Button
             text={"Добавить"}
-            type="button"
+            type="submit"
             onClick={handleClickPush}
             isLoader={loader.add}
+            disabled={!inputValue}
           />
           <Button
             text={"Удалить"}
             type="button"
             onClick={handleClickPop}
             isLoader={loader.delete}
+            disabled={!array.length}
           />
         </div>
-        <Button text={"Очистить"} type="button" onClick={handleClickClear} />
-      </form>
+        <Button
+          text={"Очистить"}
+          type="button"
+          onClick={handleClickClear}
+          disabled={!array.length}
+        />
+      </div>
       <ul className={styles.circle_container}>
         {array?.map((item, index) => {
           return (

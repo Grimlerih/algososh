@@ -17,7 +17,7 @@ export type TElement = {
 export const QueuePage: FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [queue] = useState(new Queue<TElement>(7));
-  const [array, setArray] = useState<TElement[]>([]);
+  const [array, setArray] = useState<TElement[]>(queue.getContainer());
   const [loader, setLoader] = useState({
     add: false,
     delete: false,
@@ -59,7 +59,7 @@ export const QueuePage: FC = () => {
 
   return (
     <SolutionLayout title="Очередь">
-      <form className={styles.form}>
+      <div className={styles.form}>
         <div className={styles.input_container}>
           <Input
             placeholder="Введите текст"
@@ -78,11 +78,15 @@ export const QueuePage: FC = () => {
             text={"Удалить"}
             onClick={handleClickDequeue}
             isLoader={loader.delete}
-            disabled={loader.add || !!queue.isEmpty()}
+            disabled={loader.add || queue.isEmpty()}
           />
         </div>
-        <Button text={"Очистить"} onClick={handleClickClear} />
-      </form>
+        <Button
+          text={"Очистить"}
+          onClick={handleClickClear}
+          disabled={queue.isEmpty()}
+        />
+      </div>
       <ul className={styles.circle_container}>
         {array.map((item, index) => {
           return (
