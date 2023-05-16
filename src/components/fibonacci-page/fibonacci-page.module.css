@@ -6,8 +6,11 @@
 }
 
 .circle_list {
-  margin: 120px 0 0 0;
+  margin: 120px auto 0;
   justify-content: center;
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
+  row-gap: 78px;
+  max-width: 944px;
 }
