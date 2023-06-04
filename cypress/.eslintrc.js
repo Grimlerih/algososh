@@ -1,8 +1,4 @@
 {
-  "plugins": [
-   "cypress"
-  ],
-  "extends": [
-   "plugin:cypress/recommended"
-  ]
-  } 
+  "plugin": ["cypress"],
+  "extends": ["plugin:cypress/recomended"]
+}
