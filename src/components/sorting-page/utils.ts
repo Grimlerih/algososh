@@ -1,5 +1,6 @@
 import { SortTypes } from './sorting-page'
 import { ElementStates } from '../../types/element-states'
+import { Direction } from "../../types/direction";
 
 
 export const swap = (arr: SortTypes[] , firstIndex: number, secondIndex: number) => {
@@ -25,3 +26,23 @@ export const getRandomArray = () => {
   return arr;
 }
 
+export const testSelectionSort = (
+  arr: SortTypes[],
+  order: Direction
+) => {
+  const { length } = arr;
+  for (let i = 0; i < length - 1; i++) {
+    let maxInd = i;
+    for (let j = i + 1; j < length; j++) {
+      if (
+        order === Direction.Ascending
+          ? arr[j] < arr[maxInd]
+          : arr[j] > arr[maxInd]
+      ) {
+        maxInd = j;
+      }
+    }
+    swap(arr, maxInd, i);
+  }
+  return arr;
+};
