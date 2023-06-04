@@ -1,7 +1,7 @@
 import { testBubbleSort } from "../utils";
 import { Direction } from "../../../types/direction";
 
-describe("Тест алгоритма сортировки выбором", () => {
+describe("Тест алгоритма сортировки пузырьком", () => {
   it("Сортировка пустого массива по возрастанию", () => {
     expect(testBubbleSort([], Direction.Ascending)).toEqual([]);
   });

@@ -7,7 +7,7 @@ import { Circle } from "../ui/circle/circle";
 import { DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
 
-interface IString {
+export interface IString {
   symbol: string;
   state: ElementStates;
 }
@@ -60,15 +60,19 @@ export const StringComponent: FC = () => {
     firstIndex: number,
     secondIndex: number
   ) => {
+    console.log(...arr);
     setTimeout(() => {
       arr[firstIndex].state = ElementStates.Changing;
       arr[secondIndex].state = ElementStates.Changing;
+      console.log(...arr);
+
       setArray([...arr]);
     }, time);
     setTimeout(() => {
       swap(arr, firstIndex, secondIndex);
       arr[firstIndex].state = ElementStates.Modified;
       arr[secondIndex].state = ElementStates.Modified;
+      console.log(...arr);
       setArray([...arr]);
     }, time + 1000);
     if (firstIndex + 1 === secondIndex || firstIndex === secondIndex) {
