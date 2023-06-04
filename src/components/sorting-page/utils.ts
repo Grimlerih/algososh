@@ -46,3 +46,19 @@ export const testSelectionSort = (
   }
   return arr;
 };
+
+export const testBubbleSort =  (arr: SortTypes[], order: Direction) => {
+  const { length } = arr;
+  for (let i = 0; i < length; i++) {
+    for (let j = 0; j < length - i - 1; j++) {
+      if (
+        order === Direction.Ascending
+          ? arr[j] > arr[j + 1]
+          : arr[j] < arr[j + 1]
+      ) {
+        swap(arr, j, j + 1);
+      }
+    }
+  }
+  return arr;
+};
