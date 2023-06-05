@@ -245,18 +245,21 @@ export const ListPage: FC = () => {
           <Button
             type="button"
             text="Добавить в head"
+            data="add-button"
             disabled={inputValue && !head.buttonDisable ? false : true}
             onClick={() => handleAddHead(inputValue!)}
           />
           <Button
             type="button"
             text="Добавить в tail"
+            data="add-button"
             disabled={inputValue && !tail.buttonDisable ? false : true}
             onClick={() => handleAddTail(inputValue!)}
           />
           <Button
             type="button"
             text="Удалить из head"
+            data="delete-button"
             isLoader={head.buttonLoad}
             disabled={array.length > 0 && !head.buttonDisable ? false : true}
             onClick={() => handleDeleteHead()}
@@ -264,6 +267,7 @@ export const ListPage: FC = () => {
           <Button
             type="button"
             text="Удалить из tail"
+            data="delete-button"
             isLoader={tail.buttonLoad}
             disabled={array.length > 0 && !tail.buttonDisable ? false : true}
             onClick={() => handleDeleteTail()}
@@ -280,6 +284,7 @@ export const ListPage: FC = () => {
           <Button
             type="button"
             text="Добавить по индексу"
+            data="add-button"
             disabled={
               (indexInputValue as number) <= array.length - 1 &&
               (indexInputValue as number) >= 0 &&
@@ -294,6 +299,7 @@ export const ListPage: FC = () => {
           <Button
             type="button"
             text="Удалить по индексу"
+            data="delete-button"
             disabled={
               (indexInputValue as number) <= array.length - 1 &&
               (indexInputValue as number) >= 0 &&
