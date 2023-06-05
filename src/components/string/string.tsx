@@ -7,7 +7,7 @@ import { Circle } from "../ui/circle/circle";
 import { DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
 
-interface IString {
+export interface IString {
   symbol: string;
   state: ElementStates;
 }

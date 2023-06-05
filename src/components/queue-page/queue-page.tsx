@@ -71,12 +71,14 @@ export const QueuePage: FC = () => {
           />
           <Button
             text={"Добавить"}
+            data="add-button"
             type="submit"
             disabled={loader.delete || !inputValue || queue.isFullQueue()}
             isLoader={loader.add}
           />
           <Button
             text={"Удалить"}
+            data="delete-button"
             onClick={handleClickDequeue}
             isLoader={loader.delete}
             disabled={loader.add || queue.isEmpty()}
@@ -84,6 +86,7 @@ export const QueuePage: FC = () => {
         </div>
         <Button
           text={"Очистить"}
+          data="clear-button"
           onClick={handleClickClear}
           disabled={queue.isEmpty()}
         />

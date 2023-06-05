@@ -83,12 +83,14 @@ export const StackPage: FC = () => {
           <Button
             text={"Добавить"}
             type="submit"
+            data="add-button"
             isLoader={loader.add}
             disabled={!inputValue}
           />
           <Button
             text={"Удалить"}
             type="button"
+            data="delete-button"
             onClick={handleClickPop}
             isLoader={loader.delete}
             disabled={!array.length}
@@ -96,6 +98,7 @@ export const StackPage: FC = () => {
         </div>
         <Button
           text={"Очистить"}
+          data="clear-button"
           type="button"
           onClick={handleClickClear}
           disabled={!array.length}
