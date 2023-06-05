@@ -40,7 +40,7 @@ describe("Тест алгоритма Стэк", () => {
     cy.get(circle).should("have.length", 0).should("not.exist");
   });
 
-  it("Если в инпуте пусто, то кнопка добавления недоступна", () => {
+  it("Корректная работа кнопки очистки", () => {
     const testValue = ["wq", "eq", "ee"];
     cy.clock();
     for (let i = 0; i < testValue.length; i++) {
